@@ -1,6 +1,6 @@
-import 'package:aguilera_gate_control/automatic_gate_operation.dart';
 import 'package:aguilera_gate_control/automatically_open_gate.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_sms/flutter_sms.dart';
 
 var smsText = '';
@@ -11,9 +11,10 @@ var levelsImageHeight = 0.0;
 var deviceHeight = 0.0;
 var stdFontSize = 0.0;
 var deviceWidth = 0.0;
+var deviceOrientation;
 
-class ControlCommands extends StatelessWidget {
-  const ControlCommands({super.key});
+class AutomaticGateOperation extends StatelessWidget {
+  const AutomaticGateOperation({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +63,7 @@ class ControlCommands extends StatelessWidget {
     //  print('deviceWidth = ${MediaQuery.of(context).size.width}');
     //  print('stdFontSize = $stdFontSize');
 
-        return Scaffold(
+    return Scaffold(
       // backgroundColor: Colors.white,
       appBar: PreferredSize(
           preferredSize: Size.fromHeight(85.00),
@@ -72,9 +73,13 @@ class ControlCommands extends StatelessWidget {
               AppBar(
                   centerTitle: true,
                   backgroundColor: Colors.white,
+                  leading: IconButton(
+                    icon: Icon(Icons.arrow_back_ios, color: Colors.blue),
+                    onPressed: () => Navigator.pop(context),
+                  ),
                   elevation: 0,
                   title: Text(
-                    'Agilera Gate Control',
+                    'Automatic Gate Operation',
                     style: TextStyle(
                         fontSize: stdFontSize,
                         fontWeight: FontWeight.bold,
@@ -91,39 +96,22 @@ class ControlCommands extends StatelessWidget {
         children: <Widget>[
           // WDAA Logo image
           Image.asset(
-            'assets/images/Gate1.png',
+            'assets/images/Gate2.png',
             fit: BoxFit.contain,
             height: levelsImageHeight,
           ),
           SizedBox(height: 5),
 
           // Start the rows of TextButtons
-          SMSTextButton(smsText: '1234#1#', longLevelName: 'Open Gate 30 seconds'),
+          SMSTextButton(smsText: 'aog', longLevelName: 'Automatically Open Gate'),
 
-          SMSTextButton(smsText: '1234#2#', longLevelName: 'Hold Gate Open'),
+          SMSTextButton(smsText: '', longLevelName: 'Automatically Close Gate'),
 
-          SMSTextButton(smsText: '1234#3#', longLevelName: 'Close Gate'),
+          SMSTextButton(smsText: '*24#', longLevelName: 'Automatic Gate \nOperation Requests'),
 
-          SMSTextButton(smsText: 'ago', longLevelName: 'Automatic Gate Operation'),
+          SMSTextButton(smsText: '1234*#', longLevelName: 'Delete All Automatic \nGate Operation Requests'),
 
-          SMSTextButton(smsText: '*22#', longLevelName: 'Gate Status'),
-
-          Row(
-            children: <Widget>[
-              Expanded(
-                child: Container(
-                  padding: EdgeInsets.fromLTRB(10.0,
-                      MediaQuery.of(context).size.height * 0.01, 10.0, 10.0),
-                  child: Text(
-                    '©2024 Legend Enterprises. Flutter V1.0.1+1',
-                    softWrap: true,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 16),
-                  ), // Text
-                ), // Container
-              ),
-            ], // children
-          ),
+          SMSTextButton(smsText: '*24#', longLevelName: 'Gate Status'),
         ],
       ),
     );
@@ -159,7 +147,7 @@ class SMSTextButton extends StatelessWidget {
           // alignment: Alignment.centerLeft,
           child: Container(
             padding: EdgeInsets.fromLTRB(
-                //padding between button lines
+              //padding between button lines
                 0.0,
                 MediaQuery.of(context).size.height * 0.03,
                 0.0,
@@ -171,21 +159,21 @@ class SMSTextButton extends StatelessWidget {
                 imageHeight = imageHeight;
                 deviceHeight = deviceHeight;
                 levelsImageHeight = levelsImageHeight;
-                deviceWidth = deviceWidth;
+                deviceOrientation == Orientation.portrait;
 
-               // go to Automatic Gate Opening to set opening parameters
-                if (smsText == 'ago'){
+                // go to Automatic Gate Opening to set opening parameters
+                if (smsText == 'aog'){
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => AutomaticGateOperation()),
+                    MaterialPageRoute(builder: (context) => AutomaticGateOpening()),
                   ); // Navigator.push
                 } //
 
-                 else {
+                else {
                   // Phone number and message to send
-                 String phoneNumber = "19714897051"; // Replace with actual number
-                String message = "$smsText";
-                _sendSMS(message, [phoneNumber]);}
+                  String phoneNumber = "19714897051"; // Replace with actual number
+                  String message = "$smsText";
+                  _sendSMS(message, [phoneNumber]);}
 
               }, // onPressed
 
@@ -195,6 +183,7 @@ class SMSTextButton extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                   fontSize: stdFontSize,
                 ),
+                textAlign: TextAlign.center,
               ),
             ),
           ),

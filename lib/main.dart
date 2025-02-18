@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
           textTheme: ButtonTextTheme.accent
           ),
         ),
-      home: control_commands(),
+      home: ControlCommands(),
     );
   }
 }
