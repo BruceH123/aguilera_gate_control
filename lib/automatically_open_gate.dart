@@ -1,3 +1,6 @@
+import 'package:aguilera_gate_control/control_commands.dart';
+import 'package:aguilera_gate_control/gate_response_translation.dart';
+import 'package:aguilera_gate_control/automatic_gate_operation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
@@ -31,7 +34,7 @@ class _AutomaticGateOpeningState extends State<AutomaticGateOpening> {
     timeController.dispose();
     timeFocusNode.dispose();
     super.dispose();
-  }
+  }  // dispose
 
   void selectDay(String day) {
     setState(() {
@@ -58,17 +61,20 @@ class _AutomaticGateOpeningState extends State<AutomaticGateOpening> {
     if (gateDay != null && gateTime != null) {
       String smsText = "1234#2#$gateDay#$gateTime#";
       List<String> recipients = ["19714897051"]; // Replace with actual gate controller number
-
+      globalReturn = 'AutomaticGateOperation';
+      globalLongLevelName = 'Automatically Open Gate';
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => GateResponseTranslation()),
+      ); // Navigator.push
       try {
         await sendSMS(message: smsText, recipients: recipients);
-        print("SMS sent: $smsText to ${recipients[0]}");
       } catch (error) {
         print("Failed to send SMS: $error");
       }
     } else {
-      print("Please select a day and enter a valid time.");
-    }
-  }
+          }  // if
+  }  // sendGateSMS
 
   @override
   Widget build(BuildContext context) {
@@ -87,10 +93,10 @@ class _AutomaticGateOpeningState extends State<AutomaticGateOpening> {
             onPressed: () => Navigator.pop(context),
           ),
           title: Text(
-            "Automated Gate Control",
+            "Automatically Open Gate",
             style: TextStyle(
               color: Colors.black,
-              fontSize: stdFontSize,
+              fontSize: stdFontSize+7,
               fontWeight: FontWeight.bold,
               fontFamily: "Arial",
             ),

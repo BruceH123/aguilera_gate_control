@@ -2,6 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+    <key>NSUserNotificationUsageDescription</key>
+    <string>We need to send you notifications for gate control updates.</string>
+    <key>UIUserNotificationSettings</key>
+    <true/>
+    <key>NSRemoteNotificationUsageDescription</key>
+    <string>This app needs permission to receive SMS notifications for gate control.</string>
 	<key>NSSMSUsageDescription</key>
     <string>We need access to send SMS messages</string>
     <key>CFBundleDevelopmentRegion</key>

@@ -1,14 +1,16 @@
+import 'package:aguilera_gate_control/control_commands.dart';
+import 'package:aguilera_gate_control/gate_response_translation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_sms/flutter_sms.dart';
 
-class AutomaticGateOpening extends StatefulWidget {
+class AutomaticGateClosing extends StatefulWidget {
   @override
-  _AutomaticGateOpeningState createState() => _AutomaticGateOpeningState();
+  _AutomaticGateClosingState createState() => _AutomaticGateClosingState();
 }
 
-class _AutomaticGateOpeningState extends State<AutomaticGateOpening> {
+class _AutomaticGateClosingState extends State<AutomaticGateClosing> {
   String? gateDay;
   String? gateTime;
   TextEditingController timeController = TextEditingController();
@@ -58,17 +60,20 @@ class _AutomaticGateOpeningState extends State<AutomaticGateOpening> {
     if (gateDay != null && gateTime != null) {
       String smsText = "1234#3#$gateDay#$gateTime#";
       List<String> recipients = ["19714897051"]; // Replace with actual gate controller number
-
+      globalLongLevelName = 'Automatically Close Gate';
+      globalReturn = 'AutomaticGateOperation';
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => GateResponseTranslation()),
+      ); // Navigator.push
       try {
         await sendSMS(message: smsText, recipients: recipients);
-        print("SMS sent: $smsText to ${recipients[0]}");
-      } catch (error) {
+             } catch (error) {
         print("Failed to send SMS: $error");
       }
     } else {
-      print("Please select a day and enter a valid time.");
-    }
-  }
+    }  // else
+  }  // sendGateSMS
 
   @override
   Widget build(BuildContext context) {
@@ -87,10 +92,10 @@ class _AutomaticGateOpeningState extends State<AutomaticGateOpening> {
             onPressed: () => Navigator.pop(context),
           ),
           title: Text(
-            "Automated Gate Control",
+            "Automatically Close Gate",
             style: TextStyle(
               color: Colors.black,
-              fontSize: stdFontSize,
+              fontSize: stdFontSize+7,
               fontWeight: FontWeight.bold,
               fontFamily: "Arial",
             ),
@@ -101,7 +106,7 @@ class _AutomaticGateOpeningState extends State<AutomaticGateOpening> {
             children: [
               SizedBox(height: 20),
               Text(
-                "Automatic Gate Opening",
+                "Automatic Gate Closing",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.black,
@@ -233,9 +238,12 @@ class _AutomaticGateOpeningState extends State<AutomaticGateOpening> {
               // SEND Button (Bottom Center)
               Padding(
                 padding: EdgeInsets.only(bottom: 40, top: 20),
-                child: CupertinoButton(
+                child: MaterialButton(
                   padding: EdgeInsets.zero,
-                  onPressed: sendGateSMS,
+                  onPressed: (){
+                    sendGateSMS();
+                }, // onPressed
+
                   child: Container(
                     width: deviceWidth * 0.6,
                     height: deviceWidth * 0.2,

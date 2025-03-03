@@ -1,28 +1,46 @@
 PODS:
+  - alt_sms_autofill (0.0.1):
+    - Flutter
   - Flutter (1.0.0)
+  - flutter_app_badger (1.3.0):
+    - Flutter
+  - flutter_local_notifications (0.0.1):
+    - Flutter
   - flutter_sms (1.1.0):
     - Flutter
   - url_launcher_ios (0.0.1):
     - Flutter
 
 DEPENDENCIES:
+  - alt_sms_autofill (from `.symlinks/plugins/alt_sms_autofill/ios`)
   - Flutter (from `Flutter`)
+  - flutter_app_badger (from `.symlinks/plugins/flutter_app_badger/ios`)
+  - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - flutter_sms (from `.symlinks/plugins/flutter_sms/ios`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
 
 EXTERNAL SOURCES:
+  alt_sms_autofill:
+    :path: ".symlinks/plugins/alt_sms_autofill/ios"
   Flutter:
     :path: Flutter
+  flutter_app_badger:
+    :path: ".symlinks/plugins/flutter_app_badger/ios"
+  flutter_local_notifications:
+    :path: ".symlinks/plugins/flutter_local_notifications/ios"
   flutter_sms:
     :path: ".symlinks/plugins/flutter_sms/ios"
   url_launcher_ios:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
 
 SPEC CHECKSUMS:
+  alt_sms_autofill: 6c623529a8de6a2a9297358bdb7dab3d8ad693e4
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+  flutter_app_badger: b87fc231847b03b92ce1412aa351842e7e97932f
+  flutter_local_notifications: df98d66e515e1ca797af436137b4459b160ad8c9
   flutter_sms: 91ce41530f55c85d6524d82307a5d555844c086a
   url_launcher_ios: 5334b05cef931de560670eeae103fd3e431ac3fe
 
-PODFILE CHECKSUM: 819463e6a0290f5a72f145ba7cde16e8b6ef0796
+PODFILE CHECKSUM: 351dbda8241c6ae667acbc7bc0353a0d9978d7f1
 
 COCOAPODS: 1.16.2

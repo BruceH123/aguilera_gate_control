@@ -1,16 +1,19 @@
 import 'package:aguilera_gate_control/automatic_gate_operation.dart';
-import 'package:aguilera_gate_control/automatically_open_gate.dart';
+import 'package:aguilera_gate_control/gate_response_translation.dart';
+//import 'package:aguilera_gate_control/message_translation_old.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sms/flutter_sms.dart';
 
 var smsText = '';
 var longLevelName = '';
-
-var imageHeight = 0.0;
+var globalLongLevelName = '';
+var deviceType = '';
 var levelsImageHeight = 0.0;
-var deviceHeight = 0.0;
 var stdFontSize = 0.0;
-var deviceWidth = 0.0;
+var deviceHeight = 0.0;
+var imageHeight = 0.0;
+var deviceOrientation;
+var globalReturn = '';
 
 class ControlCommands extends StatelessWidget {
   const ControlCommands({super.key});
@@ -18,52 +21,47 @@ class ControlCommands extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Set Global Variables for display parameters
-    deviceWidth = MediaQuery.of(context).size.width;
-    deviceHeight = MediaQuery.of(context).size.height;
     Orientation deviceOrientation = MediaQuery.of(context).orientation;
+    deviceHeight = MediaQuery.of(context).size.height;
+    deviceHeight > 950 ? deviceType = 'Tablet' : deviceType = 'Phone';
 
-    // Set imageHeight Phone
-    if (deviceOrientation == Orientation.portrait) {
+        // device = Phone
+    if (deviceType == 'Phone' && deviceOrientation == Orientation.portrait)
       imageHeight = MediaQuery.of(context).size.height * 0.4;
-    }
 
     // Orientation Landscape
-    if (deviceOrientation == Orientation.landscape) {
+    if (deviceType == 'Phone' && deviceOrientation == Orientation.landscape)
       imageHeight = MediaQuery.of(context).size.height * 0.8;
-    }
 
-    // Set levelsImageHeight for both orientations for the Levels top image.
-    if (deviceOrientation == Orientation.portrait) {
+    // device = Phone
+    if (deviceType == 'Phone' && deviceOrientation == Orientation.portrait)
       levelsImageHeight = MediaQuery.of(context).size.height * 0.22;
-    }
 
     // Orientation Landscape
-    if (deviceOrientation == Orientation.landscape) {
+    if (deviceType == 'Phone' && deviceOrientation == Orientation.landscape)
       levelsImageHeight = MediaQuery.of(context).size.height * 0.6;
-    }
 
-    // Set stdFontSize
-    if (deviceOrientation == Orientation.portrait) {
+    if (deviceType == 'Phone' && deviceOrientation == Orientation.portrait)
       stdFontSize = MediaQuery.of(context).size.height * 0.032;
-    }
 
     // For tall narrow phones
-    if (deviceHeight > 810 && deviceOrientation == Orientation.portrait) {
+    if (deviceHeight > 810 && deviceOrientation == Orientation.portrait)
       stdFontSize = 22;
-    }
 
     // Orientation Landscape
-    if (deviceOrientation == Orientation.landscape) {
+    if (deviceType == 'Phone' && deviceOrientation == Orientation.landscape)
       stdFontSize = MediaQuery.of(context).size.height * 0.06;
-    }
 
-    //  print('deviceOrientation = $deviceOrientation');
-    //  print('deviceHeight = $deviceHeight');
-    //  print('deviceWidth = ${MediaQuery.of(context).size.width}');
-    //  print('stdFontSize = $stdFontSize');
+    // deviceType = Tablet
+    if (deviceType == 'Tablet' && deviceOrientation == Orientation.portrait)
+      stdFontSize = MediaQuery.of(context).size.height * 0.03;
 
-        return Scaffold(
-      // backgroundColor: Colors.white,
+    // Orientation Landscape
+    if (deviceType == 'Tablet' && deviceOrientation == Orientation.landscape)
+      stdFontSize = MediaQuery.of(context).size.width * 0.03;
+
+
+    return Scaffold(
       appBar: PreferredSize(
           preferredSize: Size.fromHeight(85.00),
           child: Column(
@@ -76,7 +74,7 @@ class ControlCommands extends StatelessWidget {
                   title: Text(
                     'Agilera Gate Control',
                     style: TextStyle(
-                        fontSize: stdFontSize,
+                        fontSize: stdFontSize+5,
                         fontWeight: FontWeight.bold,
                         color: Colors.black),
                     textAlign: TextAlign.center,
@@ -167,14 +165,16 @@ class SMSTextButton extends StatelessWidget {
             child: MaterialButton(
               onPressed: () {
                 // set the Level global variables
+                deviceOrientation == Orientation.portrait;
                 stdFontSize = stdFontSize;
                 imageHeight = imageHeight;
                 deviceHeight = deviceHeight;
                 levelsImageHeight = levelsImageHeight;
-                deviceWidth = deviceWidth;
+                globalLongLevelName = longLevelName;
 
                // go to Automatic Gate Opening to set opening parameters
                 if (smsText == 'ago'){
+                  globalReturn = 'ControlCommands';
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => AutomaticGateOperation()),
@@ -185,8 +185,14 @@ class SMSTextButton extends StatelessWidget {
                   // Phone number and message to send
                  String phoneNumber = "19714897051"; // Replace with actual number
                 String message = "$smsText";
-                _sendSMS(message, [phoneNumber]);}
+                _sendSMS(message, [phoneNumber]);
+                globalReturn = 'ControlCommands';
+                Navigator.push(
 
+                   context,
+                   MaterialPageRoute(builder: (context) => GateResponseTranslation()),
+                 ); // Navigator.push
+                 }  // else
               }, // onPressed
 
               child: Text(
@@ -201,5 +207,5 @@ class SMSTextButton extends StatelessWidget {
         )
       ], // children
     );
-  } // Widget
+   } // Widget
 } // class SMSTextButton

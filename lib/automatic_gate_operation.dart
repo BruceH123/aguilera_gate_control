@@ -1,68 +1,19 @@
+import 'package:aguilera_gate_control/automatically_close_gate.dart';
 import 'package:aguilera_gate_control/automatically_open_gate.dart';
+import 'package:aguilera_gate_control/gate_response_translation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_sms/flutter_sms.dart';
+import 'control_commands.dart';
+import 'package:aguilera_gate_control/automatic_gate_operation.dart';
 
-var smsText = '';
-var longLevelName = '';
-
-var imageHeight = 0.0;
-var levelsImageHeight = 0.0;
-var deviceHeight = 0.0;
-var stdFontSize = 0.0;
-var deviceWidth = 0.0;
-var deviceOrientation;
+var smsText1 = '';
 
 class AutomaticGateOperation extends StatelessWidget {
   const AutomaticGateOperation({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Set Global Variables for display parameters
-    deviceWidth = MediaQuery.of(context).size.width;
-    deviceHeight = MediaQuery.of(context).size.height;
-    Orientation deviceOrientation = MediaQuery.of(context).orientation;
-
-    // Set imageHeight Phone
-    if (deviceOrientation == Orientation.portrait) {
-      imageHeight = MediaQuery.of(context).size.height * 0.4;
-    }
-
-    // Orientation Landscape
-    if (deviceOrientation == Orientation.landscape) {
-      imageHeight = MediaQuery.of(context).size.height * 0.8;
-    }
-
-    // Set levelsImageHeight for both orientations for the Levels top image.
-    if (deviceOrientation == Orientation.portrait) {
-      levelsImageHeight = MediaQuery.of(context).size.height * 0.22;
-    }
-
-    // Orientation Landscape
-    if (deviceOrientation == Orientation.landscape) {
-      levelsImageHeight = MediaQuery.of(context).size.height * 0.6;
-    }
-
-    // Set stdFontSize
-    if (deviceOrientation == Orientation.portrait) {
-      stdFontSize = MediaQuery.of(context).size.height * 0.032;
-    }
-
-    // For tall narrow phones
-    if (deviceHeight > 810 && deviceOrientation == Orientation.portrait) {
-      stdFontSize = 22;
-    }
-
-    // Orientation Landscape
-    if (deviceOrientation == Orientation.landscape) {
-      stdFontSize = MediaQuery.of(context).size.height * 0.06;
-    }
-
-    //  print('deviceOrientation = $deviceOrientation');
-    //  print('deviceHeight = $deviceHeight');
-    //  print('deviceWidth = ${MediaQuery.of(context).size.width}');
-    //  print('stdFontSize = $stdFontSize');
-
     return Scaffold(
       // backgroundColor: Colors.white,
       appBar: PreferredSize(
@@ -75,13 +26,18 @@ class AutomaticGateOperation extends StatelessWidget {
                   backgroundColor: Colors.white,
                   leading: IconButton(
                     icon: Icon(Icons.arrow_back_ios, color: Colors.blue),
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ControlCommands()),
+                      ); // Navigator.push
+                    }
                   ),
                   elevation: 0,
                   title: Text(
                     'Automatic Gate Operation',
                     style: TextStyle(
-                        fontSize: stdFontSize,
+                        fontSize: stdFontSize+3,
                         fontWeight: FontWeight.bold,
                         color: Colors.black),
                     textAlign: TextAlign.center,
@@ -103,15 +59,15 @@ class AutomaticGateOperation extends StatelessWidget {
           SizedBox(height: 5),
 
           // Start the rows of TextButtons
-          SMSTextButton(smsText: 'aog', longLevelName: 'Automatically Open Gate'),
+          SMSTextButton(smsText1: 'aog', longLevelName: 'Automatically Open Gate'),
 
-          SMSTextButton(smsText: '', longLevelName: 'Automatically Close Gate'),
+          SMSTextButton(smsText1: 'acg', longLevelName: 'Automatically Close Gate'),
 
-          SMSTextButton(smsText: '*24#', longLevelName: 'Automatic Gate \nOperation Requests'),
+          SMSTextButton(smsText1: '*24#', longLevelName: 'Show Automatic Gate \nOperation Requests'),
 
-          SMSTextButton(smsText: '1234*#', longLevelName: 'Delete All Automatic \nGate Operation Requests'),
+          SMSTextButton(smsText1: '1234*#', longLevelName: 'Delete All Automatic \nGate Operation Requests'),
 
-          SMSTextButton(smsText: '*24#', longLevelName: 'Gate Status'),
+          SMSTextButton(smsText1: '*22#', longLevelName: 'Gate Status'),
         ],
       ),
     );
@@ -119,9 +75,9 @@ class AutomaticGateOperation extends StatelessWidget {
 } // class control_commands
 
 class SMSTextButton extends StatelessWidget {
-  const SMSTextButton({
+   SMSTextButton({
     super.key,
-    required this.smsText,
+    required this.smsText1,
     required this.longLevelName,
   });
 
@@ -135,8 +91,8 @@ class SMSTextButton extends StatelessWidget {
     }
   }
 
-  final String smsText;
-  final String longLevelName;
+  final String smsText1;
+  String longLevelName;
 
   @override
   Widget build(BuildContext context) {
@@ -155,26 +111,42 @@ class SMSTextButton extends StatelessWidget {
             child: MaterialButton(
               onPressed: () {
                 // set the Level global variables
-                stdFontSize = stdFontSize;
+               /* stdFontSize = stdFontSize;
                 imageHeight = imageHeight;
                 deviceHeight = deviceHeight;
                 levelsImageHeight = levelsImageHeight;
-                deviceOrientation == Orientation.portrait;
+                deviceOrientation == Orientation.portrait;*/
+              //  longLevelName = longLevelName;
 
                 // go to Automatic Gate Opening to set opening parameters
-                if (smsText == 'aog'){
+                if (smsText1 == 'aog'){
+                  globalLongLevelName ='Automatically Open Gate';
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => AutomaticGateOpening()),
                   ); // Navigator.push
                 } //
 
+                else if (smsText1 == 'acg'){
+                  globalLongLevelName ='Automatically Close Gate';
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AutomaticGateClosing()),
+                  ); // Navigator.push
+                } //
+
                 else {
                   // Phone number and message to send
                   String phoneNumber = "19714897051"; // Replace with actual number
-                  String message = "$smsText";
-                  _sendSMS(message, [phoneNumber]);}
-
+                  String message = "$smsText1";
+                  _sendSMS(message, [phoneNumber]);
+                  globalLongLevelName = longLevelName;
+                  globalReturn = 'AutomaticGateOperation';
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => GateResponseTranslation()), // Navigator.push
+                  );  // Navigator.push
+                }  // else
               }, // onPressed
 
               child: Text(
